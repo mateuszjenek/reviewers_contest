@@ -4,6 +4,7 @@ import 'package:meta/meta.dart';
 
 import 'package:reviewers_contest_app/reviewers_contest/domain/i_pull_request_repository.dart';
 import 'package:reviewers_contest_app/reviewers_contest/domain/i_reviewers_contest_winner_calculator.dart';
+import 'package:reviewers_contest_app/reviewers_contest/domain/pull_request.dart';
 import 'package:reviewers_contest_app/reviewers_contest/domain/reviewer.dart';
 
 part 'reviewers_contest_event.dart';
@@ -16,7 +17,7 @@ class ReviewersContestBloc
   final IReviewersContestWinnerCalculator contestCalculator;
 
   ReviewersContestBloc(this.pullRequestRepository, this.contestCalculator)
-      : super(Initial()) {
+      : super(ReviewersContestInitial()) {
     on<GetReviewersContestWinner>((event, emit) async {
       emit(Loading());
       var getPullRequestsRequest = await pullRequestRepository.getPullRequests(
@@ -30,7 +31,7 @@ class ReviewersContestBloc
         (pullRequests) {
           final reviewers = contestCalculator.getAllReviewers(pullRequests);
           final winners = contestCalculator.calculateWinners(reviewers);
-          emit(Loaded(winners, reviewers));
+          emit(Loaded(winners, reviewers, pullRequests));
         },
       );
     });

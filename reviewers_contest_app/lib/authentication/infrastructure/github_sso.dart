@@ -22,7 +22,6 @@ class GithubSSO implements IGithubSSO {
         path: "/static.html",
       );
       var cientId = const String.fromEnvironment("GITHUB_SSO_CLIENT_ID");
-      print(cientId);
       final authUrl =
           "https://github.com/login/oauth/authorize?client_id=$cientId&redirect_uri=$redirectUri";
 

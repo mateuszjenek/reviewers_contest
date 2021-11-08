@@ -1,8 +1,11 @@
+import 'dart:html';
+
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 
+import 'package:reviewers_contest_app/reviewers_contest/application/reports_generator_bloc.dart';
 import 'package:reviewers_contest_app/reviewers_contest/application/reviewers_contest_bloc.dart';
 
 class ReviewersContestPage extends StatelessWidget {
@@ -18,17 +21,68 @@ class ReviewersContestPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => GetIt.instance.get<ReviewersContestBloc>()
-        ..add(
-          GetReviewersContestWinner(token, startDate, endDate, repository),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => GetIt.instance.get<ReviewersContestBloc>()
+            ..add(GetReviewersContestWinner(
+                token, startDate, endDate, repository)),
         ),
+        BlocProvider(
+          create: (context) => GetIt.instance.get<ReportsGeneratorBloc>(),
+        )
+      ],
       child: Scaffold(
         appBar: AppBar(
           actions: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.file_download),
+            BlocBuilder<ReviewersContestBloc, ReviewersContestState>(
+              builder: (context, reviewersState) {
+                if (reviewersState is Loaded) {
+                  return BlocBuilder<ReportsGeneratorBloc,
+                      ReportsGeneratorState>(
+                    builder: (context, reportsState) {
+                      if (reportsState is ReportsGeneratorInitial) {
+                        return IconButton(
+                          onPressed: () {
+                            context
+                                .read<ReportsGeneratorBloc>()
+                                .add(GenerateRaports(
+                                  reviewersState.pullRequests,
+                                  reviewersState.reviewers,
+                                ));
+                          },
+                          tooltip: "Generate",
+                          icon: const Icon(Icons.document_scanner),
+                        );
+                      } else if (reportsState is Generated) {
+                        return Row(
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                window.location.href = reportsState.prReportUrl;
+                              },
+                              icon: const Icon(Icons.file_download),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                window.location.href =
+                                    reportsState.reviewerReportUrl;
+                              },
+                              icon: const Icon(Icons.file_download),
+                            ),
+                          ],
+                        );
+                      } else {
+                        return const IconButton(
+                            onPressed: null, icon: Icon(Icons.refresh));
+                      }
+                    },
+                  );
+                } else {
+                  return const IconButton(
+                      onPressed: null, icon: Icon(Icons.refresh));
+                }
+              },
             ),
           ],
         ),
