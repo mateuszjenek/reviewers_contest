@@ -1,7 +1,8 @@
+import 'dart:html';
+
 import 'package:bloc/bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
-import 'dart:html';
 
 import 'package:reviewers_contest_app/reviewers_contest/domain/i_report_generator.dart';
 import 'package:reviewers_contest_app/reviewers_contest/domain/pull_request.dart';
