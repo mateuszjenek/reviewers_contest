@@ -10,9 +10,9 @@
             "type": "dart",
             "args": [
                 "--dart-define",
-                "REVIEWERS_CONTEST_SSO_TOKEN_ENDPOINT=",
+                "REVIEWERS_CONTEST_SSO_TOKEN_ENDPOINT=http://localhost:8090/token",
                 "--dart-define",
-                "GITHUB_SSO_CLIENT_ID="
+                "GITHUB_SSO_CLIENT_ID=cef18769e2779b1d0016"
             ]
         },
         {
@@ -22,9 +22,9 @@
             "flutterMode": "release",
             "args": [
                 "--dart-define",
-                "REVIEWERS_CONTEST_SSO_TOKEN_ENDPOINT=",
+                "REVIEWERS_CONTEST_SSO_TOKEN_ENDPOINT=http://localhost:8090/token",
                 "--dart-define",
-                "GITHUB_SSO_CLIENT_ID="
+                "GITHUB_SSO_CLIENT_ID=cef18769e2779b1d0016"
             ]
         }
     ]
